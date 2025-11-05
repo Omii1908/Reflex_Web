@@ -1,45 +1,29 @@
 
-export interface SensorReading {
-  timestamp: number;
-  accel: { x: number; y: number; z: number };
-  gyro: { x: number; y: number; z: number };
+export interface TimeSeriesDataPoint {
+  time: string;
+  x: number;
+  y: number;
+  z: number;
 }
 
-export interface ContextualInfo {
+export interface SensorData {
+  accelerometer: TimeSeriesDataPoint[];
+  gyroscope: TimeSeriesDataPoint[];
+}
+
+export interface TripContext {
+  speed: number;
+  location: string;
   weather: string;
   traffic: string;
-  roadClass: string;
-  regionType: string;
+  roadType: string;
+  altitude: number;
+  accidentHistory: string;
+  carCondition: string;
 }
 
-export interface Location {
-    latitude: number;
-    longitude: number;
-}
-
-export interface TripData extends SensorReading {
-    speed: number;
-    location: Location;
-    context: ContextualInfo;
-}
-
-export interface EmergencyContact {
-    id: number;
-    name: string;
-    phone: string;
-    relation: string;
-}
-
-export interface TrafficData {
-  condition: 'Flowing' | 'Slow' | 'Congested';
-  averageSpeed: number;
-  description: string;
-}
-
-export interface DrivingAnalysis {
-  hardBrakingEvents: number;
-  suddenAccelerationEvents: number;
-  sharpTurnEvents: number;
-  summary: string;
-  recommendations: string[];
+export interface LogEntry {
+  time: Date;
+  message: string;
+  type: 'info' | 'warning' | 'alert';
 }

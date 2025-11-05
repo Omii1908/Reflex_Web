@@ -1,79 +1,101 @@
-
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { RadialBarChart, RadialBar, ResponsiveContainer, PolarAngleAxis } from 'recharts';
 
 interface RiskMeterProps {
   riskScore: number;
-  analysis: string;
-  isLoading: boolean;
 }
 
-const RiskMeter: React.FC<RiskMeterProps> = ({ riskScore, analysis, isLoading }) => {
-  const score = Math.min(Math.max(riskScore, 0), 100);
-  const circumference = 2 * Math.PI * 90; // 2 * pi * r
-  const strokeDashoffset = circumference - (score / 100) * circumference;
+export const RiskMeter: React.FC<RiskMeterProps> = ({ riskScore }) => {
+  const score = Math.min(100, Math.max(0, riskScore));
+  let color = '#22c55e'; // green
+  if (score > 40) color = '#f59e0b'; // yellow
+  if (score > 75) color = '#ef4444'; // red
 
-  const getColor = () => {
-    if (score > 75) return 'text-brand-danger';
-    if (score > 40) return 'text-brand-warning';
-    return 'text-brand-safe';
-  };
-  
-  const getBGColor = () => {
-    if (score > 75) return 'stroke-brand-danger';
-    if (score > 40) return 'stroke-brand-warning';
-    return 'stroke-brand-safe';
-  };
+  const data = [{ name: 'Risk', value: score, fill: color }];
+
+  const [displayScore, setDisplayScore] = useState(score);
+  const prevScoreRef = useRef(score);
+  // FIX: Initialize useRef with null and update the type to allow null.
+  const animationFrameRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const startValue = prevScoreRef.current;
+    const endValue = score;
+    const duration = 800;
+    let startTime: number;
+
+    const animate = (timestamp: number) => {
+        if (startTime === undefined) {
+            startTime = timestamp;
+        }
+
+        const elapsed = timestamp - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const currentAnimatedValue = startValue + (endValue - startValue) * progress;
+        
+        setDisplayScore(currentAnimatedValue);
+
+        if (progress < 1) {
+            animationFrameRef.current = requestAnimationFrame(animate);
+        } else {
+            // Update ref to the final value when animation completes
+            prevScoreRef.current = endValue;
+        }
+    };
+
+    // Cancel previous animation frame if a new score comes in
+    if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+    }
+    
+    animationFrameRef.current = requestAnimationFrame(animate);
+
+    return () => {
+        if (animationFrameRef.current) {
+            cancelAnimationFrame(animationFrameRef.current);
+        }
+        // On cleanup, ensure the ref is the latest score for the next animation start
+        prevScoreRef.current = score;
+    };
+}, [score]);
+
 
   return (
-    <div className="bg-brand-secondary p-6 rounded-2xl shadow-lg text-center flex flex-col items-center justify-center aspect-square">
-        <h2 className="text-xl font-semibold text-gray-300 mb-4">Live Risk Meter</h2>
-        <div className="relative w-52 h-52">
-            <svg className="w-full h-full" viewBox="0 0 200 200">
-                {/* Background circle */}
-                <circle
-                    className="text-gray-700"
-                    strokeWidth="15"
-                    stroke="currentColor"
-                    fill="transparent"
-                    r="90"
-                    cx="100"
-                    cy="100"
-                />
-                {/* Progress circle */}
-                <circle
-                    className={`${getBGColor()} transition-all duration-500 ease-in-out`}
-                    strokeWidth="15"
-                    strokeDasharray={circumference}
-                    strokeDashoffset={strokeDashoffset}
-                    strokeLinecap="round"
-                    stroke="currentColor"
-                    fill="transparent"
-                    r="90"
-                    cx="100"
-                    cy="100"
-                    transform="rotate(-90 100 100)"
-                />
-            </svg>
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-                {isLoading ? (
-                    <div className="animate-pulse text-gray-400">Loading...</div>
-                ) : (
-                    <>
-                        <span className={`font-orbitron text-6xl font-bold ${getColor()}`}>
-                            {score}
-                        </span>
-                        <span className="text-lg text-gray-400">%</span>
-                    </>
-                )}
-            </div>
+    <div className="bg-gray-800 rounded-lg p-4 flex flex-col items-center justify-center shadow-lg h-full min-h-[280px]">
+      <h3 className="text-lg font-semibold text-gray-300 mb-2">Live Risk Meter</h3>
+      <div className="w-full h-48 relative">
+        <ResponsiveContainer width="100%" height="100%">
+          <RadialBarChart
+            innerRadius="70%"
+            outerRadius="100%"
+            data={data}
+            startAngle={180}
+            endAngle={0}
+            barSize={20}
+          >
+            <PolarAngleAxis
+              type="number"
+              domain={[0, 100]}
+              angleAxisId={0}
+              tick={false}
+            />
+            <RadialBar
+              background={{ fill: '#374151' }}
+              dataKey="value"
+              cornerRadius={10}
+              isAnimationActive={true}
+              animationDuration={800}
+            />
+          </RadialBarChart>
+        </ResponsiveContainer>
+        <div className="absolute top-0 left-0 right-0 bottom-0 flex flex-col items-center justify-center">
+            <span className="text-5xl font-bold" style={{ color, fontFamily: "'Orbitron', sans-serif" }}>
+              {displayScore.toFixed(0)}
+              <span className="text-3xl text-gray-400">%</span>
+            </span>
+            <span className="text-gray-400 font-medium mt-1">Accident Probability</span>
         </div>
-        <div className="mt-4 h-12 flex items-center">
-            <p className="text-gray-300 italic">
-                {isLoading ? <span className="animate-pulse">Analyzing data...</span> : analysis}
-            </p>
-        </div>
+      </div>
     </div>
   );
 };
-
-export default RiskMeter;

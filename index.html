@@ -11,12 +11,13 @@
         theme: {
           extend: {
             colors: {
-              'brand-dark': '#111827',
-              'brand-secondary': '#1F2937',
-              'brand-accent': '#38BDF8',
-              'brand-danger': '#F43F5E',
-              'brand-warning': '#FACC15',
-              'brand-safe': '#4ADE80',
+              'brand-red': '#ef4444',
+              'brand-yellow': '#f59e0b',
+              'brand-green': '#22c55e',
+              'gray-900': '#111827',
+              'gray-800': '#1f2937',
+              'gray-700': '#374151',
+              'gray-400': '#9ca3af',
             },
             fontFamily: {
               sans: ['Inter', 'sans-serif'],
@@ -27,21 +28,21 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
   <script type="importmap">
 {
   "imports": {
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
     "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
     "@google/genai": "https://aistudiocdn.com/@google/genai@^1.28.0",
-    "recharts": "https://aistudiocdn.com/recharts@^3.3.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
+    "recharts": "https://aistudiocdn.com/recharts@^3.3.0"
   }
 }
 </script>
 <link rel="stylesheet" href="/index.css">
 </head>
-  <body class="bg-brand-dark text-gray-200">
+  <body class="bg-gray-900">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>
