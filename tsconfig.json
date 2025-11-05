@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "experimentalDecorators": true,
+    "experimentalDecorators": true, // This is needed for Reflex.
     "useDefineForClassFields": false,
     "module": "ESNext",
     "lib": [
