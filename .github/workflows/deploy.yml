@@ -1,0 +1,48 @@
+name: Deploy React App to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # Or your default branch
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build_and_deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write # To push to gh-pages branch
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18' # As specified in your README.md
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build application
+        run: npm run build # This will run `vite build`
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'Deploy to GitHub Pages'
+
+      - name: Post-deployment message
+        run: |
+          echo "✅ Deployment successful!"
+          echo "🚀 Your site is live at: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
