@@ -1,49 +1,1365 @@
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>REFLEX - Accident Detection System</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              'brand-red': '#ef4444',
-              'brand-yellow': '#f59e0b',
-              'brand-green': '#22c55e',
-              'gray-900': '#111827',
-              'gray-800': '#1f2937',
-              'gray-700': '#374151',
-              'gray-400': '#9ca3af',
-            },
-            fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-            },
-          },
-        },
-      }
-    </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
-  <script type="importmap">
-{
-  "imports": {
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.28.0",
-    "recharts": "https://aistudiocdn.com/recharts@^3.3.0"
-  }
-}
-</script>
-<link rel="stylesheet" href="/index.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REFLEX - Smart Vehicle Safety Monitor</title>
+    <style>
+        :root {
+            /* Dark Theme */
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-tertiary: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --text-muted: #666666;
+            --accent-primary: #00d4ff;
+            --accent-secondary: #0099cc;
+            --success: #00ff88;
+            --warning: #ffaa00;
+            --danger: #ff3366;
+            --border: rgba(255, 255, 255, 0.1);
+            --shadow: rgba(0, 0, 0, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 212, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 0, 102, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(0, 255, 136, 0.1) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+            background: rgba(10, 10, 10, 0.8);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(135deg, var(--accent-primary), var(--success));
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-primary);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-primary), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-text p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .status-dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .status-active { background: var(--success); }
+        .status-warning { background: var(--warning); }
+        .status-danger { background: var(--danger); }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        /* Main Layout */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: auto auto auto;
+            gap: 1.5rem;
+            grid-template-areas:
+                "risk-meter trip-info emergency"
+                "accel-chart gyro-chart status-log"
+                "ai-analysis ai-analysis ai-analysis";
+        }
+
+        /* Glass Card Component */
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--glass-border), transparent);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .card-icon {
+            width: 1.2rem;
+            height: 1.2rem;
+            color: var(--accent-primary);
+        }
+
+        /* Risk Meter */
+        .risk-meter {
+            grid-area: risk-meter;
+        }
+
+        .risk-display {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .risk-value {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-primary), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .risk-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 0.5rem;
+        }
+
+        .modern-gauge-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 1rem 0;
+        }
+
+        .modern-gauge {
+            width: 200px;
+            height: 200px;
+        }
+
+        .risk-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--accent-primary);
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Trip Info */
+        .trip-info {
+            grid-area: trip-info;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .info-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .info-icon {
+            width: 1rem;
+            height: 1rem;
+            color: var(--accent-primary);
+        }
+
+        .info-content {
+            flex: 1;
+        }
+
+        .info-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .info-value {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* Emergency Contacts */
+        .emergency-contacts {
+            grid-area: emergency;
+        }
+
+        .contact-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .contact-item:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--accent-primary);
+            transform: translateX(2px);
+        }
+
+        .contact-avatar {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(135deg, var(--accent-primary), var(--success));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--bg-primary);
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .contact-relation {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .contact-phone {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: monospace;
+        }
+
+        /* Sensor Charts */
+        .sensor-chart {
+            position: relative;
+        }
+
+        .accel-chart { grid-area: accel-chart; }
+        .gyro-chart { grid-area: gyro-chart; }
+
+        .chart-container {
+            width: 100%;
+            height: 200px;
+            margin-top: 1rem;
+            border-radius: 0.75rem;
+            overflow: visible;
+            background: rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .chart-container canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .chart-legend {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .legend-color {
+            width: 0.75rem;
+            height: 0.75rem;
+            border-radius: 50%;
+        }
+
+        /* Status Log */
+        .status-log {
+            grid-area: status-log;
+        }
+
+        .log-container {
+            max-height: 200px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .log-entry {
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.8rem;
+            border-left: 3px solid;
+            background: rgba(255, 255, 255, 0.02);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .log-info { border-color: var(--success); }
+        .log-warning { border-color: var(--warning); }
+        .log-alert { border-color: var(--danger); }
+
+        .log-time {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .log-message {
+            color: var(--text-secondary);
+        }
+
+        /* AI Analysis */
+        .ai-analysis {
+            grid-area: ai-analysis;
+        }
+
+        .ai-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: var(--bg-primary);
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .ai-result {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            min-height: 120px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .ai-placeholder {
+            color: var(--text-muted);
+            font-style: italic;
+            text-align: center;
+        }
+
+        .spinner {
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid transparent;
+            border-top: 2px solid var(--bg-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr 1fr;
+                grid-template-areas:
+                    "risk-meter trip-info"
+                    "accel-chart gyro-chart"
+                    "emergency status-log"
+                    "ai-analysis ai-analysis";
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+            }
+
+            .header-content {
+                padding: 0 1rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "risk-meter"
+                    "trip-info"
+                    "emergency"
+                    "accel-chart"
+                    "gyro-chart"
+                    "status-log"
+                    "ai-analysis";
+            }
+
+            .risk-value {
+                font-size: 2.5rem;
+            }
+
+            .glass-card {
+                padding: 1rem;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-secondary);
+        }
+    </style>
 </head>
-  <body class="bg-gray-900">
-    <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
-  </body>
+<body>
+    <div class="bg-animation"></div>
+    
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">R</div>
+                <div class="logo-text">
+                    <h1>REFLEX</h1>
+                    <p>Smart Vehicle Safety Monitor</p>
+                </div>
+            </div>
+            <div class="status-indicator">
+                <div id="statusDot" class="status-dot status-active"></div>
+                <span id="statusText">System Active</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dashboard -->
+    <main class="main-container">
+        <div class="dashboard-grid">
+            <!-- Risk Meter -->
+            <section class="glass-card risk-meter">
+                <h2 class="card-title">
+                    <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Safety Monitor
+                </h2>
+                <div class="risk-display">
+                    <div id="riskValue" class="risk-value">5%</div>
+                    <div id="riskLabel" class="risk-label">Safe Driving</div>
+                </div>
+                <div class="modern-gauge-container">
+                    <svg class="modern-gauge" viewBox="0 0 200 200">
+                        <defs>
+                            <linearGradient id="modernGaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#00ff88"/>
+                                <stop offset="50%" stop-color="#ffaa00"/>
+                                <stop offset="100%" stop-color="#ff3366"/>
+                            </linearGradient>
+                            <linearGradient id="dynamicGaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop id="stopColor1" offset="0%" stop-color="#00ff88"/>
+                                <stop id="stopColor2" offset="100%" stop-color="#00ff88"/>
+                            </linearGradient>
+                            <filter id="glow">
+                                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                                <feMerge>
+                                    <feMergeNode in="coloredBlur"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                        </defs>
+                        <!-- Background circle -->
+                        <circle cx="100" cy="100" r="80" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="16"/>
+                        <!-- Progress circle -->
+                        <circle id="riskCircle" cx="100" cy="100" r="80" fill="none" stroke="url(#dynamicGaugeGradient)" stroke-width="16" stroke-dasharray="502" stroke-dashoffset="502" stroke-linecap="round" transform="rotate(-90 100 100)" filter="url(#glow)"/>
+                        <!-- Center text background -->
+                        <circle cx="100" cy="100" r="60" fill="rgba(0,0,0,0.5)"/>
+                        <!-- Percentage text -->
+                        <text id="gaugePercentage" x="100" y="95" font-size="32" font-weight="bold" fill="#00d4ff" text-anchor="middle">5%</text>
+                        <text id="gaugeStatus" x="100" y="115" font-size="12" fill="#a0a0a0" text-anchor="middle">SAFE</text>
+                    </svg>
+                </div>
+                <div class="risk-stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="confidenceValue">98%</div>
+                        <div class="stat-label">Confidence</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="lastAlertValue">None</div>
+                        <div class="stat-label">Last Alert</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="tripDuration">0:00</div>
+                        <div class="stat-label">Trip Time</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Trip Information -->
+            <section class="glass-card trip-info">
+                <h2 class="card-title">
+                    <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                    </svg>
+                    Live Trip Metrics
+                </h2>
+                <div class="info-grid" id="tripInfoGrid">
+                    <!-- Dynamic content will be inserted here -->
+                </div>
+            </section>
+
+            <!-- Emergency Contacts -->
+            <section class="glass-card emergency-contacts">
+                <h2 class="card-title">
+                    <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                    </svg>
+                    Emergency Contacts
+                </h2>
+                <div class="contact-list" id="contactList">
+                    <!-- Dynamic content will be inserted here -->
+                </div>
+            </section>
+
+            <!-- Accelerometer Chart -->
+            <section class="glass-card sensor-chart accel-chart">
+                <h2 class="card-title">
+                    <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                    </svg>
+                    Accelerometer (m/s²)
+                </h2>
+                <div class="chart-container">
+                    <canvas id="accelChart"></canvas>
+                </div>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ef4444;"></div>
+                        <span>X-axis</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #fbbf24;"></div>
+                        <span>Y-axis</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #22c55e;"></div>
+                        <span>Z-axis</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Gyroscope Chart -->
+            <section class="glass-card sensor-chart gyro-chart">
+                <h2 class="card-title">
+                    <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                    Gyroscope (rad/s)
+                </h2>
+                <div class="chart-container">
+                    <canvas id="gyroChart"></canvas>
+                </div>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ec4899;"></div>
+                        <span>X-axis</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ef4444;"></div>
+                        <span>Y-axis</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #a855f7;"></div>
+                        <span>Z-axis</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Status Log -->
+            <section class="glass-card status-log">
+                <h2 class="card-title">
+                    <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    System Log
+                </h2>
+                <div class="log-container" id="logContainer">
+                    <!-- Dynamic content will be inserted here -->
+                </div>
+            </section>
+
+            <!-- AI Analysis -->
+            <section class="glass-card ai-analysis">
+                <h2 class="card-title">
+                    <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                    </svg>
+                    AI Trip Analysis
+                </h2>
+                <div class="ai-controls">
+                    <button id="analyzeBtn" class="btn btn-primary">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                        <span id="analyzeText">Generate Analysis</span>
+                    </button>
+                </div>
+                <div id="aiResult" class="ai-result">
+                    <div class="ai-placeholder">Click "Generate Analysis" to get an AI-powered assessment of current driving conditions and safety recommendations.</div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // Application State
+        let appState = {
+            riskScore: 5,
+            sensorData: { accelerometer: [], gyroscope: [] },
+            tripContext: {
+                speed: 0,
+                location: "Loading...",
+                weather: "Loading...",
+                traffic: "Light",
+                roadType: "Highway",
+                altitude: 0,
+                accidentHistory: "Medium",
+                carCondition: "Good"
+            },
+            status: "active",
+            activityLog: [{ time: new Date(), message: "REFLEX system initialized successfully", type: "info" }],
+            tickCounter: 0,
+            tripStartTime: new Date(),
+            charts: { accel: null, gyro: null }
+        };
+
+        // Emergency Contacts Data
+        const EMERGENCY_CONTACTS = [
+            { name: "Priya Singh", relation: "Spouse", phone: "+91 98765 43210" },
+            { name: "Ravi Kumar", relation: "Father", phone: "+91 98765 12345" },
+            { name: "Amit Sharma", relation: "Friend", phone: "+91 99887 76655" },
+            { name: "Dr. Mehta", relation: "Family Doctor", phone: "+91 98765 99999" }
+        ];
+
+        // Initialize Application
+        async function initializeApp() {
+            renderEmergencyContacts();
+            renderTripInfo();
+            renderActivityLog();
+            initializeCharts();
+            await fetchLocationData();
+            startDataSimulation();
+        }
+
+        // Location Services
+        async function fetchLocationData() {
+            if (!navigator.geolocation) {
+                updateTripData("Delhi, India", "Clear, 28°C", 216);
+                return;
+            }
+
+            addLogEntry("Acquiring location data...", "info");
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    try {
+                        const data = await fetchEnvironmentalData(position.coords.latitude, position.coords.longitude);
+                        updateTripData(data.location, data.weather, data.altitude);
+                        addLogEntry("Location data acquired successfully", "info");
+                    } catch (error) {
+                        updateTripData("Delhi, India", "Clear, 28°C", 216);
+                        addLogEntry("Using default location settings", "info");
+                    }
+                },
+                () => {
+                    updateTripData("Delhi, India", "Clear, 28°C", 216);
+                    addLogEntry("Using default location settings", "info");
+                }
+            );
+        }
+
+        async function fetchEnvironmentalData(lat, lon) {
+            const WEATHER_CODES = {
+                0: 'Clear', 1: 'Mainly Clear', 2: 'Partly Cloudy', 3: 'Overcast',
+                45: 'Fog', 51: 'Light Drizzle', 53: 'Moderate Drizzle', 61: 'Slight Rain',
+                63: 'Moderate Rain', 65: 'Heavy Rain', 95: 'Thunderstorm'
+            };
+
+            try {
+                const [weatherRes, locationRes] = await Promise.all([
+                    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=weather_code,temperature_2m`),
+                    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`)
+                ]);
+
+                if (!weatherRes.ok || !locationRes.ok) throw new Error('API Error');
+
+                const weatherData = await weatherRes.json();
+                const locationData = await locationRes.json();
+
+                const weather = `${WEATHER_CODES[weatherData.current.weather_code] || 'Unknown'}, ${weatherData.current.temperature_2m}°C`;
+                const altitude = weatherData.elevation || 0;
+                const city = locationData.address.city || locationData.address.town || 'Unknown Area';
+                const country = locationData.address.country || '';
+                const location = country ? `${city}, ${country}` : city;
+
+                return { weather, altitude, location };
+            } catch (error) {
+                throw new Error("Failed to fetch environmental data");
+            }
+        }
+
+        function updateTripData(location, weather, altitude) {
+            appState.tripContext.location = location;
+            appState.tripContext.weather = weather;
+            appState.tripContext.altitude = Math.round(altitude);
+            renderTripInfo();
+        }
+
+        // UI Rendering Functions
+        function renderEmergencyContacts() {
+            const container = document.getElementById('contactList');
+            container.innerHTML = EMERGENCY_CONTACTS.map(contact => `
+                <div class="contact-item" onclick="initiateEmergencyCall('${contact.phone}')">
+                    <div class="contact-avatar">${contact.name.charAt(0)}</div>
+                    <div class="contact-info">
+                        <div class="contact-name">${contact.name}</div>
+                        <div class="contact-relation">${contact.relation}</div>
+                        <div class="contact-phone">${contact.phone}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderTripInfo() {
+            const icons = {
+                speed: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>',
+                location: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>',
+                weather: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>',
+                traffic: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>',
+                road: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>',
+                altitude: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-9 5 9M5 18l7-7 7 7"/>'
+            };
+
+            const items = [
+                { icon: icons.speed, label: 'Speed', value: `${appState.tripContext.speed} km/h` },
+                { icon: icons.location, label: 'Location', value: appState.tripContext.location },
+                { icon: icons.weather, label: 'Weather', value: appState.tripContext.weather },
+                { icon: icons.traffic, label: 'Traffic Density', value: appState.tripContext.traffic },
+                { icon: icons.road, label: 'Road Type', value: appState.tripContext.roadType },
+                { icon: icons.altitude, label: 'Elevation', value: `${appState.tripContext.altitude} m` },
+                { icon: icons.road, label: 'Accident History', value: appState.tripContext.accidentHistory },
+                { icon: icons.speed, label: 'Car Condition', value: appState.tripContext.carCondition }
+            ];
+
+            const container = document.getElementById('tripInfoGrid');
+            container.innerHTML = items.map(item => `
+                <div class="info-item">
+                    <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">${item.icon}</svg>
+                    <div class="info-content">
+                        <div class="info-label">${item.label}</div>
+                        <div class="info-value">${item.value}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderActivityLog() {
+            const container = document.getElementById('logContainer');
+            container.innerHTML = appState.activityLog.map(entry => {
+                const time = entry.time.toLocaleTimeString('en-US', { hour12: false });
+                return `
+                    <div class="log-entry log-${entry.type}">
+                        <div class="log-time">${time}</div>
+                        <div class="log-message">${entry.message}</div>
+                    </div>
+                `;
+            }).join('');
+            container.scrollTop = 0;
+        }
+
+        function addLogEntry(message, type) {
+            appState.activityLog.unshift({ time: new Date(), message, type });
+            appState.activityLog = appState.activityLog.slice(0, 3);
+            renderActivityLog();
+        }
+
+        function updateRiskDisplay() {
+            const riskValue = document.getElementById('riskValue');
+            const riskLabel = document.getElementById('riskLabel');
+            const riskCircle = document.getElementById('riskCircle');
+            const gaugePercentage = document.getElementById('gaugePercentage');
+            const gaugeStatus = document.getElementById('gaugeStatus');
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+
+            const score = Math.round(appState.riskScore);
+            const circumference = 502;
+            const offset = circumference - (score / 100 * circumference);
+
+            riskValue.textContent = `${score}%`;
+            gaugePercentage.textContent = `${score}%`;
+            riskCircle.style.strokeDashoffset = offset;
+
+            // Update dynamic gradient based on risk score
+            const stopColor1 = document.getElementById('stopColor1');
+            const stopColor2 = document.getElementById('stopColor2');
+            
+            if (score <= 40) {
+                // Low risk: green gradient
+                stopColor1.setAttribute('stop-color', '#00ff88');
+                stopColor2.setAttribute('stop-color', '#00dd77');
+            } else if (score <= 75) {
+                // Medium risk: yellow/orange gradient
+                stopColor1.setAttribute('stop-color', '#ffaa00');
+                stopColor2.setAttribute('stop-color', '#ff8800');
+            } else {
+                // High risk: red gradient
+                stopColor1.setAttribute('stop-color', '#ff3366');
+                stopColor2.setAttribute('stop-color', '#ff1144');
+            }
+
+            if (score > 75) {
+                riskLabel.textContent = 'Critical Risk';
+                gaugeStatus.textContent = 'CRITICAL';
+                riskLabel.style.color = 'var(--danger)';
+                statusDot.className = 'status-dot status-danger';
+                statusText.textContent = 'Emergency Alert';
+                if (appState.status !== 'danger') {
+                    appState.status = 'danger';
+                    addLogEntry("CRITICAL: High risk detected! Emergency protocols activated", "alert");
+                }
+            } else if (score > 40) {
+                riskLabel.textContent = 'Elevated Risk';
+                gaugeStatus.textContent = 'CAUTION';
+                riskLabel.style.color = 'var(--warning)';
+                gaugePercentage.setAttribute('fill', '#ffaa00');
+                gaugeStatus.setAttribute('fill', '#ffaa00');
+                statusDot.className = 'status-dot status-warning';
+                statusText.textContent = 'Caution Mode';
+                appState.status = 'warning';
+            } else {
+                riskLabel.textContent = 'Safe Driving';
+                gaugeStatus.textContent = 'SAFE';
+                riskLabel.style.color = 'var(--success)';
+                gaugePercentage.setAttribute('fill', '#00ff88');
+                gaugeStatus.setAttribute('fill', '#00ff88');
+                statusDot.className = 'status-dot status-active';
+                statusText.textContent = 'System Active';
+                appState.status = 'active';
+            }
+        }
+
+        // Chart Initialization and Rendering
+        function initializeCharts() {
+            const accelCanvas = document.getElementById('accelChart');
+            const gyroCanvas = document.getElementById('gyroChart');
+            
+            appState.charts.accel = { 
+                ctx: accelCanvas.getContext('2d'), 
+                canvas: accelCanvas 
+            };
+            appState.charts.gyro = { 
+                ctx: gyroCanvas.getContext('2d'), 
+                canvas: gyroCanvas 
+            };
+        }
+
+        function drawChart(chart, data, colors, title) {
+            const { ctx, canvas } = chart;
+            const width = canvas.width = canvas.offsetWidth * devicePixelRatio;
+            const height = canvas.height = canvas.offsetHeight * devicePixelRatio;
+            
+            ctx.scale(devicePixelRatio, devicePixelRatio);
+            const displayWidth = width / devicePixelRatio;
+            const displayHeight = height / devicePixelRatio;
+
+            ctx.clearRect(0, 0, displayWidth, displayHeight);
+
+            if (!data.length) return;
+
+            const padding = { top: 20, right: 20, bottom: 30, left: 50 };
+            const chartWidth = displayWidth - padding.left - padding.right;
+            const chartHeight = displayHeight - padding.top - padding.bottom;
+
+            // Find data range
+            let minVal = Infinity, maxVal = -Infinity;
+            data.forEach(point => {
+                ['x', 'y', 'z'].forEach(key => {
+                    if (point[key] < minVal) minVal = point[key];
+                    if (point[key] > maxVal) maxVal = point[key];
+                });
+            });
+
+            const range = maxVal - minVal || 1;
+            const stepX = chartWidth / Math.max(data.length - 1, 1);
+
+            // Draw grid
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                const y = padding.top + (chartHeight / 4) * i;
+                ctx.beginPath();
+                ctx.moveTo(padding.left, y);
+                ctx.lineTo(displayWidth - padding.right, y);
+                ctx.stroke();
+            }
+
+            // Draw axis labels
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.font = '10px -apple-system, sans-serif';
+            ctx.textAlign = 'right';
+            
+            // Y-axis labels (values)
+            for (let i = 0; i <= 4; i++) {
+                const value = maxVal - (range / 4) * i;
+                const y = padding.top + (chartHeight / 4) * i;
+                ctx.fillText(value.toFixed(1), padding.left - 5, y + 3);
+            }
+            
+            // X-axis labels (time - show every 5th point)
+            ctx.textAlign = 'center';
+            const labelInterval = Math.max(1, Math.floor(data.length / 4));
+            for (let i = 0; i < data.length; i += labelInterval) {
+                const x = padding.left + i * stepX;
+                const timeLabel = data[i].time ? data[i].time.split(':').slice(1).join(':') : '';
+                ctx.fillText(timeLabel, x, displayHeight - 5);
+            }
+
+            // Draw smooth curves using quadratic Bezier
+            ['x', 'y', 'z'].forEach((axis, idx) => {
+                ctx.strokeStyle = colors[idx];
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+
+                const points = data.map((point, i) => ({
+                    x: padding.left + i * stepX,
+                    y: padding.top + chartHeight - ((point[axis] - minVal) / range) * chartHeight
+                }));
+
+                if (points.length > 0) {
+                    ctx.moveTo(points[0].x, points[0].y);
+
+                    for (let i = 0; i < points.length - 1; i++) {
+                        const current = points[i];
+                        const next = points[i + 1];
+                        
+                        // Calculate control point for smooth curve
+                        const controlX = (current.x + next.x) / 2;
+                        const controlY = (current.y + next.y) / 2;
+                        
+                        ctx.quadraticCurveTo(current.x, current.y, controlX, controlY);
+                    }
+                    
+                    // Draw final segment
+                    if (points.length > 1) {
+                        const last = points[points.length - 1];
+                        ctx.lineTo(last.x, last.y);
+                    }
+                }
+
+                ctx.stroke();
+            });
+        }
+
+        // Data Simulation
+        function startDataSimulation() {
+            setInterval(() => {
+                appState.tickCounter++;
+                simulateDataTick();
+                updateTripDuration();
+            }, 1500);
+        }
+
+        function updateTripDuration() {
+            const duration = Math.floor((new Date() - appState.tripStartTime) / 1000);
+            const minutes = Math.floor(duration / 60);
+            const seconds = duration % 60;
+            const durationElement = document.getElementById('tripDuration');
+            if (durationElement) {
+                durationElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+        }
+
+        function simulateDataTick() {
+            let newRisk = appState.riskScore;
+            let newSpeed = appState.tripContext.speed;
+            let isHighRiskEvent = false;
+            
+            const eventRandom = Math.random();
+            
+            if (eventRandom < 0.05) { // Hard braking
+                isHighRiskEvent = true;
+                const speedReduction = Math.min(newSpeed, Math.random() * 25 + 20);
+                newSpeed -= speedReduction;
+                newRisk = Math.min(100, newRisk + 30);
+                addLogEntry(`Emergency braking detected (-${speedReduction.toFixed(0)} km/h)`, "warning");
+            } else if (eventRandom < 0.09) { // Rapid acceleration
+                isHighRiskEvent = true;
+                const speedIncrease = Math.random() * 25 + 15;
+                newSpeed += speedIncrease;
+                newRisk = Math.min(100, newRisk + 25);
+                addLogEntry(`Rapid acceleration detected (+${speedIncrease.toFixed(0)} km/h)`, "warning");
+            } else {
+                newRisk = Math.max(5, newRisk - 0.7);
+                newSpeed += (Math.random() - 0.5) * 8;
+            }
+
+            newSpeed = Math.max(0, Math.min(130, newSpeed));
+
+            // Generate sensor data
+            const timestamp = new Date().toLocaleTimeString('en-US', { 
+                hour12: false, 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit' 
+            });
+
+            // Realistic accelerometer data simulation (m/s²)
+            // X: lateral acceleration (turns), Y: longitudinal (braking/acceleration), Z: vertical (bumps)
+            const baseAccelX = Math.sin(appState.tickCounter * 0.1) * 0.3; // Gentle steering variations
+            const baseAccelY = Math.cos(appState.tickCounter * 0.05) * 0.5; // Speed variations
+            const baseAccelZ = 9.8 + Math.sin(appState.tickCounter * 0.15) * 0.2; // Road bumps
+            
+            const accelData = {
+                time: timestamp,
+                x: isHighRiskEvent ? (Math.random() - 0.5) * 20 + baseAccelX * 8 : baseAccelX + (Math.random() - 0.5) * 0.8,
+                y: isHighRiskEvent ? (Math.random() - 0.5) * 22 : baseAccelY + (Math.random() - 0.5) * 1.2,
+                z: isHighRiskEvent ? 9.8 + (Math.random() - 0.5) * 15 : baseAccelZ + (Math.random() - 0.5) * 0.5
+            };
+
+            // Realistic gyroscope data simulation (rad/s)
+            // X: pitch (acceleration/braking), Y: roll (turns), Z: yaw (rotation)
+            const baseGyroX = Math.sin(appState.tickCounter * 0.08) * 0.05; // Pitch variations
+            const baseGyroY = Math.cos(appState.tickCounter * 0.12) * 0.08; // Roll from steering
+            const baseGyroZ = Math.sin(appState.tickCounter * 0.06) * 0.03; // Yaw from turns
+            
+            const gyroData = {
+                time: timestamp,
+                x: isHighRiskEvent ? (Math.random() - 0.5) * 3.5 + baseGyroX * 10 : baseGyroX + (Math.random() - 0.5) * 0.15,
+                y: isHighRiskEvent ? (Math.random() - 0.5) * 3.8 : baseGyroY + (Math.random() - 0.5) * 0.2,
+                z: isHighRiskEvent ? (Math.random() - 0.5) * 2.5 : baseGyroZ + (Math.random() - 0.5) * 0.1
+            };
+
+            // Check for sharp turns
+            const maxGyro = Math.max(Math.abs(gyroData.x), Math.abs(gyroData.y));
+            if (maxGyro > 1.0) {
+                newRisk = Math.min(100, newRisk + 20);
+                addLogEntry(`Sharp turn detected (${maxGyro.toFixed(2)} rad/s)`, "warning");
+            }
+
+            // Update traffic based on time
+            const hour = new Date().getHours();
+            if ((hour >= 7 && hour <= 10) || (hour >= 17 && hour <= 20)) {
+                appState.tripContext.traffic = "Heavy";
+                if (newRisk < 50) newRisk = Math.min(100, newRisk + 2);
+            } else if (hour > 10 && hour < 17) {
+                appState.tripContext.traffic = "Moderate";
+            } else {
+                appState.tripContext.traffic = "Light";
+            }
+
+            // Update state
+            appState.riskScore = parseFloat(newRisk.toFixed(1));
+            appState.tripContext.speed = Math.round(newSpeed);
+            
+            appState.sensorData.accelerometer = [...appState.sensorData.accelerometer.slice(-19), accelData];
+            appState.sensorData.gyroscope = [...appState.sensorData.gyroscope.slice(-19), gyroData];
+
+            // Periodic speed logging
+            if (appState.tickCounter % 8 === 0) {
+                addLogEntry(`Current speed: ${Math.round(newSpeed)} km/h`, "info");
+            }
+
+            // Update UI
+            updateRiskDisplay();
+            renderTripInfo();
+            drawChart(appState.charts.accel, appState.sensorData.accelerometer, ['#ef4444', '#fbbf24', '#22c55e'], 'Accelerometer');
+            drawChart(appState.charts.gyro, appState.sensorData.gyroscope, ['#ec4899', '#ef4444', '#a855f7'], 'Gyroscope');
+        }
+
+        // Emergency Functions
+        function initiateEmergencyCall(phoneNumber) {
+            addLogEntry(`Initiating emergency call to ${phoneNumber}`, "alert");
+            // In a real app, this would trigger actual emergency protocols
+        }
+
+        // AI Analysis
+        document.getElementById('analyzeBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('analyzeBtn');
+            const btnText = document.getElementById('analyzeText');
+            const result = document.getElementById('aiResult');
+
+            btn.disabled = true;
+            btnText.textContent = 'Analyzing...';
+            btn.innerHTML = '<div class="spinner"></div>' + btn.innerHTML.split('</div>')[1];
+            result.innerHTML = '<div class="ai-placeholder">Analyzing driving patterns and environmental conditions...</div>';
+
+            try {
+                await new Promise(resolve => setTimeout(resolve, 2500));
+
+                const latestAccel = appState.sensorData.accelerometer[appState.sensorData.accelerometer.length - 1] || {};
+                const latestGyro = appState.sensorData.gyroscope[appState.sensorData.gyroscope.length - 1] || {};
+
+                const analysis = generateAIAnalysis();
+                result.innerHTML = analysis;
+                addLogEntry("AI analysis completed successfully", "info");
+            } catch (error) {
+                result.innerHTML = '<div style="color: var(--danger);">Analysis failed. Please try again.</div>';
+                addLogEntry("AI analysis failed", "warning");
+            } finally {
+                btn.disabled = false;
+                btnText.textContent = 'Generate Analysis';
+                btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>' + btn.innerHTML.split('</svg>')[1];
+            }
+        });
+
+        function generateAIAnalysis() {
+            const riskLevel = appState.riskScore > 75 ? 'CRITICAL' : appState.riskScore > 40 ? 'ELEVATED' : 'OPTIMAL';
+            const speed = appState.tripContext.speed;
+            const traffic = appState.tripContext.traffic.toLowerCase();
+            
+            return `
+                <strong>Current Safety Assessment: ${riskLevel} (${appState.riskScore.toFixed(1)}%)</strong><br><br>
+                
+                Vehicle is traveling at ${speed} km/h in ${traffic} traffic conditions on ${appState.tripContext.roadType.toLowerCase()} terrain. 
+                Environmental factors include ${appState.tripContext.weather.toLowerCase()} weather at ${appState.tripContext.altitude}m elevation.<br><br>
+                
+                ${appState.riskScore > 75 ? 
+                    'IMMEDIATE ACTION REQUIRED: High-risk driving patterns detected. Recommend reducing speed and increasing following distance.' :
+                    appState.riskScore > 40 ?
+                    'CAUTION ADVISED: Moderate risk factors present. Maintain awareness of road conditions and traffic patterns.' :
+                    'SAFE OPERATION: All systems functioning within normal parameters. Continue current driving practices.'
+                }<br><br>
+                
+                ${appState.tripContext.carCondition !== 'Good' ? 
+                    'Vehicle maintenance attention recommended based on sensor diagnostics.' : 
+                    'Vehicle systems operating normally with optimal performance metrics.'
+                }
+            `;
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
+</body>
 </html>

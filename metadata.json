@@ -1,5 +1,0 @@
-{
-  "name": "REFLEX Web: Accident Detection Dashboard",
-  "description": "A web-based dashboard demonstrating the REFLEX AI-powered real-time vehicle accident detection system. It visualizes simulated sensor data, calculates a live risk score, and provides an AI-driven trip analysis using the Gemini API.",
-  "requestFramePermissions": ["geolocation"]
-}

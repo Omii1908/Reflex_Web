@@ -1,443 +1,381 @@
-<div align="center">
-  <img src="https://img.shields.io/badge/REFLEX-Accident%20Detection-red?style=for-the-badge&logo=car&logoColor=white" alt="REFLEX Logo"/>
-  <h1>🚨 REFLEX - Smartphone Accident Detection System</h1>
-  <p><strong>AI-Powered Real-time Vehicle Accident Detection for Indian Roads</strong></p>
+# REFLEX - Smart Vehicle Safety Monitor
 
-  ![Status](https://img.shields.io/badge/Status-In%20Development-orange?style=flat-square)
-  ![Personal Project](https://img.shields.io/badge/Type-Personal%20Project-blue?style=flat-square)
-  ![License](https://img.shields.io/badge/License-All%20Rights%20Reserved-red?style=flat-square)
+![REFLEX Banner](https://img.shields.io/badge/REFLEX-Vehicle%20Safety%20Monitor-00d4ff?style=for-the-badge)
+![React](https://img.shields.io/badge/React-18.x-61dafb?style=flat-square&logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178c6?style=flat-square&logo=typescript)
 
-  <!-- Technology Stack Badges -->
-  ![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white)
-  ![Django](https://img.shields.io/badge/Django-4.2+-092E20?style=flat-square&logo=django&logoColor=white)
-  ![React Native](https://img.shields.io/badge/React%20Native-0.72+-61DAFB?style=flat-square&logo=react&logoColor=black)
-  ![SQLite](https://img.shields.io/badge/SQLite-3.40+-003B57?style=flat-square&logo=sqlite&logoColor=white)
-  ![Redis](https://img.shields.io/badge/Redis-7+-DC382D?style=flat-square&logo=redis&logoColor=white)
-  
-  <!-- ML & Data Science -->
-  ![scikit-learn](https://img.shields.io/badge/scikit--learn-Latest-F7931E?style=flat-square&logo=scikit-learn&logoColor=white)
-  ![Pandas](https://img.shields.io/badge/Pandas-Latest-150458?style=flat-square&logo=pandas&logoColor=white)
-  ![NumPy](https://img.shields.io/badge/NumPy-Latest-013243?style=flat-square&logo=numpy&logoColor=white)
-  
-  <!-- Development Tools -->
-  ![Docker](https://img.shields.io/badge/Docker-Latest-2496ED?style=flat-square&logo=docker&logoColor=white)
-  ![VS Code](https://img.shields.io/badge/VS%20Code-Editor-007ACC?style=flat-square&logo=visual-studio-code&logoColor=white)
-  ![Git](https://img.shields.io/badge/Git-Version%20Control-F05032?style=flat-square&logo=git&logoColor=white)
-  
-  <!-- APIs & Services -->
-  ![REST API](https://img.shields.io/badge/API-REST-02569B?style=flat-square&logo=rest&logoColor=white)
-  ![Expo](https://img.shields.io/badge/Expo-Mobile%20Dev-000020?style=flat-square&logo=expo&logoColor=white)
-  ![Celery](https://img.shields.io/badge/Celery-Task%20Queue-37B24D?style=flat-square&logo=celery&logoColor=white)
-</div>
+**REFLEX** is an intelligent, real-time vehicle accident detection and safety monitoring system that leverages smartphone sensors, environmental data, and AI-powered analysis to enhance road safety.
 
 ---
 
-## 📋 Table of Contents
+## 🚀 Features
 
-- [🎯 About The Project](#-about-the-project)
-- [✨ Features](#-features)
-- [🏗️ Architecture](#️-architecture)
-- [🛠️ Built With](#️-built-with)
-- [🚀 Getting Started](#-getting-started)
-- [📱 Usage](#-usage)
-- [🔧 Configuration](#-configuration)
-- [📊 Dataset](#-dataset)
-- [🤝 Contributing](#-contributing)
-- [📄 License](#-license)
-- [👥 Team](#-team)
-- [🙏 Acknowledgments](#-acknowledgments)
+### 🛡️ Real-Time Safety Monitoring
+- **Dynamic Risk Assessment** - Continuous calculation of driving risk based on sensor data and environmental factors
+- **Live Sensor Visualization** - Real-time accelerometer and gyroscope data charts with smooth curve rendering
+- **Intelligent Alerts** - Automatic detection of hard braking, rapid acceleration, and sharp turns
 
----
+### 🌍 Environmental Integration
+- **Geolocation Tracking** - Automatic location detection using browser Geolocation API
+- **Weather Integration** - Real-time weather data from Open-Meteo API
+- **Elevation Monitoring** - Altitude tracking for terrain-based risk assessment
+- **Traffic Analysis** - Time-based traffic density estimation
 
-## 🎯 About The Project
+### 🤖 AI-Powered Analysis
+- **Google Gemini AI** - Advanced trip analysis and safety recommendations
+- **Contextual Assessment** - Considers road type, weather, traffic, and vehicle condition
+- **Predictive Alerts** - Proactive safety warnings based on driving patterns
 
-**REFLEX** is an intelligent accident detection system specifically designed for Indian road conditions. Using smartphone sensors (accelerometer, gyroscope, GPS) and machine learning algorithms trained on MoRTH (Ministry of Road Transport and Highways) data patterns, the system provides real-time accident detection and automatic emergency response.
+### 📊 Comprehensive Dashboard
+- **Safety Monitor Gauge** - Color-coded circular gauge (green → yellow → red)
+- **Live Trip Metrics** - 8-field information grid with speed, location, weather, traffic, road type, elevation, accident history, and car condition
+- **Emergency Contacts** - Quick-access emergency contact system with 4 pre-configured contacts
+- **System Log** - Real-time activity logging showing latest 3 events
+- **Sensor Charts** - Dual-axis charts for accelerometer and gyroscope data
 
-### Why REFLEX?
-
-- **53 accidents occur every hour** in India (MoRTH, 2022)
-- **19 deaths per hour** due to road accidents
-- **Delayed emergency response** increases fatality rates by 30%
-- **REFLEX reduces response time** from minutes to seconds
-
-### 🎯 Problem Statement
-
-Traditional accident detection systems rely on manual reporting or expensive infrastructure. REFLEX leverages ubiquitous smartphone sensors to create an affordable, scalable solution for accident detection and emergency response.
-
----
-
-## ✨ Features
-
-### 🔴 Core Features
-- **Real-time Monitoring**: Continuous sensor data analysis at 200ms intervals
-- **AI-Powered Detection**: Machine learning models trained on 50,000+ Indian accident scenarios
-- **Instant Alerts**: Automatic SMS/Email notifications to emergency contacts
-- **False Positive Handling**: Smart confirmation system to prevent unnecessary alerts
-- **Offline Capability**: Works without constant internet connectivity
-
-### 📊 Advanced Features
-- **Risk Scoring**: Real-time accident probability calculation (0-100%)
-- **Contextual Analysis**: Weather, traffic, and road type integration
-- **Geographic Coverage**: Optimized for all Indian regions (North to South India)
-- **Multi-language Support**: English, Hindi, and regional languages
-- **Emergency Services Integration**: Direct connection to local authorities
-
-### 🎛️ Dashboard Features
-- **Live Risk Meter**: Visual representation of current accident probability
-- **Sensor Visualization**: Real-time accelerometer, gyroscope, and GPS data
-- **Trip History**: Detailed journey logs with risk analysis
-- **Emergency Contacts Management**: Multiple contact configuration
-- **Settings Customization**: Adjustable sensitivity and alert thresholds
+### 🎨 Modern UI/UX
+- **Dark Theme** - Professional dark mode with glassmorphism effects
+- **Animated Backgrounds** - Dynamic gradient animations
+- **Responsive Design** - Optimized for desktop, tablet, and mobile devices
+- **Smooth Transitions** - Fluid animations and hover effects
 
 ---
 
-## 🏗️ Architecture
+## 🛠️ Tech Stack
 
-### System Architecture
-```text
-REFLEX
-├─ Real-time Risk Assessment
-├─ User Interface
-├─ Background Processing
+### Frontend Framework
+- **React.js** with **TypeScript** - Component-based architecture
+- **HTML5 Canvas** - High-performance chart rendering
+- **CSS3** - Modern styling with CSS variables and animations
+- **SVG Graphics** - Scalable vector icons and gauges
 
-├─ 🌐 Backend API (Django REST)
-│ ├─ User Management
-│ ├─ Sensor Data Processing
-│ ├─ ML Model Inference
-│ └─ Alert Management
+### APIs & Services
+| Service | Purpose | Endpoint |
+|---------|---------|----------|
+| **Google Gemini AI** | Trip analysis and safety recommendations | `@google/genai` |
+| **Open-Meteo API** | Weather data and elevation | `https://api.open-meteo.com/v1/forecast` |
+| **Nominatim OSM** | Reverse geocoding (location names) | `https://nominatim.openstreetmap.org/reverse` |
+| **Geolocation API** | Device location tracking | Browser native API |
 
-├─ 🧠 Machine Learning Pipeline
-│ ├─ Data Preprocessing
-│ ├─ Feature Engineering
-│ ├─ Model Training (Random Forest)
-│ └─ Model Deployment
+### Data Visualization
+- **Custom Canvas Charts** - Hand-crafted chart rendering with smooth Bezier curves
+- **Real-time Updates** - 1.5-second refresh interval for sensor data
+- **Color-Coded Axes** - Red-Yellow-Green (accelerometer), Pink-Red-Purple (gyroscope)
 
-├─ 💾 Data Layer
-│ ├─ SQLite (User & Incident Data)
-│ ├─ Redis (Real-time Cache)
-│ └─ Time-series DB (Sensor Data)
-
-└─ 🚨 Alert System
-├─ SMS Gateway (Twilio)
-├─ Email Service
-├─ Push Notifications
-└─ Emergency Services API
-```
+### State Management
+- **React Hooks** - `useState`, `useEffect`, `useCallback`, `useRef`
+- **Local State** - No external state management libraries
 
 ---
 
-## 🛠️ Built With
-
-### Backend Technologies
-- **[Django 4.2+](https://djangoproject.com/)** - Web framework
-- **[Django REST Framework](https://www.django-rest-framework.org/)** - API development
-- **[SQLite](https://sqlite.org/)** - Primary database
-- **[Redis](https://redis.io/)** - Caching and task queue
-- **[Celery](https://celeryproject.org/)** - Asynchronous task processing
-
-### Mobile Technologies
-- **[React Native 0.72+](https://reactnative.dev/)** - Cross-platform mobile app
-- **[Expo](https://expo.dev/)** - Development platform
-- **[React Navigation](https://reactnavigation.org/)** - Navigation library
-- **[React Native Sensors](https://github.com/react-native-sensors/react-native-sensors)** - Sensor access
-
-### Machine Learning
-- **[scikit-learn](https://scikit-learn.org/)** - ML algorithms
-- **[pandas](https://pandas.pydata.org/)** - Data manipulation
-- **[NumPy](https://numpy.org/)** - Numerical computing
-- **[MLflow](https://mlflow.org/)** - ML lifecycle management
-
-### DevOps & Deployment
-- **[Docker](https://docker.com/)** - Containerization
-- **[Docker Compose](https://docs.docker.com/compose/)** - Multi-container orchestration
-- **[GitHub Actions](https://github.com/features/actions)** - CI/CD pipeline
-- **[AWS/GCP](https://aws.amazon.com/)** - Cloud deployment
-
----
-
-## 🚀 Getting Started
+## 📦 Installation
 
 ### Prerequisites
+- Node.js 18.x or higher
+- npm or yarn package manager
 
-Ensure you have the following installed:
-- **Python 3.11+**
-- **Node.js 18+**
-- **SQLite 3.40+**
-- **Redis 7+**
-- **Git**
-
-### Installation
-
-1. Clone repository
+### Clone Repository
 ```bash
-git clone https://github.com/Omii1908/Reflex.git
-cd reflex
+git clone https://github.com/yourusername/reflex-safety-monitor.git
+cd reflex-safety-monitor
 ```
 
-2. Setup Backend (use conda)
+### Install Dependencies
 ```bash
-## create & activate conda env (Python 3.11)
-conda create -n reflex-backend python=3.11 -y
-conda activate reflex-backend
-
-## go to backend and install Python deps
-cd backend
-pip install -r requirements.txt
-
-## copy env template and edit .env as needed
-cp .env.example .env # Windows: copy .env.example .env
-
-## run Django migrations and create admin
-python manage.py migrate
-python manage.py createsuperuser
-
-## start dev server (accessible on localhost)
-python manage.py runserver 0.0.0.0:8000
-```
-
-3. Setup Mobile App (Node / Expo)
-```bash
-# open a new terminal in repo root
-cd mobile
-
-# use Node 18+ (install via nvm or nodejs.org if needed)
-# install JS deps
 npm install
-# or: yarn install
-
-# start Expo
-npx expo start
-
-# run on emulator/device
-npx expo run:android   # Android
-npx expo run:ios       # macOS / iOS
 ```
 
-4. Setup Machine Learning Pipeline (conda)
-```bash
-## option A: reuse backend env (skip if reusing)
-conda create -n reflex-ml python=3.11 -y
-conda activate reflex-ml
-
-## install ML deps and train
-cd ml
-pip install -r requirements.txt
-python train_model.py
+### Environment Setup
+Create a `.env` file in the project root:
+```env
+VITE_GEMINI_API_KEY=your_google_gemini_api_key_here
 ```
 
-Notes and tips
-- To reuse a single Python env for backend + ML, create one env (e.g., reflex-env) and install both requirements files into it.
-- Edit .env with your keys (OPENWEATHER_API_KEY, TWILIO_*, DB creds, etc.) before running.
-- On Windows PowerShell, use Copy-Item to copy files or use Git Bash for cp.
-- If using conda for Node, prefer installing Node via nvm or official installer for best Expo compatibility.
-
-### Docker (recommended all-in-one)
-
+### Run Development Server
 ```bash
-# start services (backend, db, redis, ml workers, etc.)
-docker-compose up -d
+npm run dev
+```
 
-# view logs
-docker-compose logs -f
-
-# stop and remove containers
-docker-compose down
+### Build for Production
+```bash
+npm run build
 ```
 
 ---
 
-## 📱 Usage
+## 🎯 Usage
 
-### Mobile App
+### Starting the Application
+1. Open the application in a modern web browser
+2. Allow location permissions when prompted (optional - defaults to Delhi, India)
+3. The system will automatically start monitoring and simulating sensor data
 
-1. **Registration & Setup**
-   - Download and install the REFLEX app
-   - Create account with phone number
-   - Add emergency contacts (2-5 contacts recommended)
-   - Set risk threshold (default: 25%)
+### Understanding the Dashboard
 
-2. **During Travel**
-   - Keep app running in background
-   - The system automatically monitors sensor data
-   - Risk level displayed on dashboard
-   - Automatic alerts sent when threshold exceeded
+#### Safety Monitor (Top Left)
+- **Circular Gauge**: Shows current risk percentage
+- **Color Zones**:
+  - 🟢 Green (0-40%): Safe driving
+  - 🟡 Yellow (41-75%): Elevated risk
+  - 🔴 Red (76-100%): Critical risk
+- **Stats**: Confidence level, last alert time, trip duration
 
-3. **Emergency Response**
-   - High-risk event detected → Countdown timer (10 seconds)
-   - User can cancel false alarm
-   - If not cancelled → Automatic alerts sent
-   - GPS location shared with emergency contacts
+#### Live Trip Metrics (Top Center)
+Real-time contextual information:
+- Current speed (km/h)
+- Location (city, country)
+- Weather conditions
+- Traffic density
+- Road type
+- Elevation (meters)
+- Accident history zone
+- Vehicle condition
 
-### API Usage
+#### Emergency Contacts (Top Right)
+Quick-access emergency contacts:
+- Priya Singh (Spouse)
+- Ravi Kumar (Father)
+- Amit Sharma (Friend)
+- Dr. Mehta (Family Doctor)
 
-```python
-# Send sensor data to TRIGGER API (replace URL and token)
-import requests
+#### Sensor Charts (Middle)
+- **Accelerometer**: X (lateral), Y (longitudinal), Z (vertical) forces in m/s²
+- **Gyroscope**: X (pitch), Y (roll), Z (yaw) rotation in rad/s
 
-url = "http://localhost:8000/api/v1/sensors/data/"
-payload = {
-    "weekday": "Mon",
-    "time": "14:30",
-    "latitude": 28.6139,
-    "longitude": 77.2090,
-    "speed_kmph": 60,
-    "accel_x": 0.15,
-    "accel_y": 0.10,
-    "accel_z": 9.85,
-    "gyro_x": 0.02,
-    "gyro_y": 0.01,
-    "gyro_z": 0.01,
-    "weather": "Clear",
-    "traffic": "Moderate",
-}
-headers = {
-    "Authorization": "Token your-api-token",
-    "Content-Type": "application/json",
-}
+#### System Log (Bottom Right)
+Latest 3 system events with timestamps and severity levels
 
-resp = requests.post(url, json=payload, headers=headers, timeout=10)
-resp.raise_for_status()
-data = resp.json()
-print(f"Risk Score: {data.get('accident_rate', 'N/A')}%")
+#### AI Analysis (Bottom)
+Click "Generate Analysis" to get AI-powered trip assessment
+
+---
+
+## 🧪 Sensor Simulation
+
+### Realistic Driving Patterns
+The system simulates authentic car driving behavior:
+
+**Accelerometer (m/s²)**
+- X-axis: Lateral forces during turns (±0.3 base, ±20 during events)
+- Y-axis: Longitudinal forces (acceleration/braking) (±0.5 base, ±22 during events)
+- Z-axis: Vertical forces from road surface (9.8 ± 0.2 base)
+
+**Gyroscope (rad/s)**
+- X-axis: Pitch (nose up/down) (±0.05 base, ±3.5 during events)
+- Y-axis: Roll (side-to-side tilt) (±0.08 base, ±3.8 during events)
+- Z-axis: Yaw (rotation) (±0.03 base, ±2.5 during events)
+
+### High-Risk Events
+- **Hard Braking**: 5% probability per tick, -20 to -45 km/h speed reduction
+- **Rapid Acceleration**: 4% probability, +15 to +40 km/h speed increase
+- **Sharp Turns**: Detected when gyroscope exceeds 1.0 rad/s
+
+---
+
+## 📱 Component Architecture
+
+```
+src/
+├── components/
+│   ├── Header.tsx              # App header with logo and status
+│   ├── RiskMeter.tsx            # Circular safety gauge
+│   ├── SensorChart.tsx          # Canvas-based sensor charts
+│   ├── InfoCard.tsx             # Trip metric cards
+│   ├── EmergencyContacts.tsx    # Emergency contact list
+│   ├── StatusLog.tsx            # Activity log viewer
+│   └── AiAnalysis.tsx           # AI analysis interface
+├── services/
+│   ├── apiService.ts            # Weather & location APIs
+│   └── geminiService.ts         # Google Gemini AI integration
+├── types/
+│   └── index.ts                 # TypeScript type definitions
+├── constants.tsx                # Icons and static data
+└── App.tsx                      # Main application component
 ```
 
 ---
 
 ## 🔧 Configuration
 
-### Environment Variables
+### Risk Calculation Logic
+```javascript
+Risk Score = Base Risk + Event Modifiers + Environmental Factors
 
-Create a `.env` file in the backend directory:
+Event Modifiers:
+- Hard Braking: +30%
+- Rapid Acceleration: +25%
+- Sharp Turn (>1.0 rad/s): +20%
 
-```env
-# Django
-SECRET_KEY='your-super-secret-key-here'
-DEBUG=False
-ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
-
-# Database (SQLite - no configuration needed, uses db.sqlite3 by default)
-# For production, consider PostgreSQL or MySQL
-
-# Redis
-REDIS_URL=redis://localhost:6379/0
-
-# External APIs
-OPENWEATHER_API_KEY=your-openweather-key
-GOOGLE_MAPS_API_KEY=your-google-maps-key
-
-# SMS / Email
-TWILIO_ACCOUNT_SID=your-twilio-sid
-TWILIO_AUTH_TOKEN=your-twilio-token
-EMAIL_HOST_USER=your-email@gmail.com
-EMAIL_HOST_PASSWORD=your-app-password
+Environmental Factors:
+- Heavy Traffic: +2% per tick
+- Poor Weather: +5% (not currently implemented)
+- High Accident History Zone: +10% (not currently implemented)
 ```
 
-### Model Configuration
-
-Place runtime-tunable ML parameters in `ml/config.py`. Use environment variables to override defaults in deployments.
-
-```python
-# ml/config.py
-import os
-
-MODEL_CONFIG = {
-    "accident_threshold": float(os.getenv("ACCIDENT_THRESHOLD", "25.0")),   # Risk % threshold to trigger alerts
-    "sensor_frequency": int(os.getenv("SENSOR_FREQUENCY_MS", "200")),       # Milliseconds between readings
-    "batch_size": int(os.getenv("BATCH_SIZE", "100")),                     # Sensor data batch size for inference/training
-    "model_retrain_interval": int(os.getenv("MODEL_RETRAIN_INTERVAL_DAYS", "7")),  # Days between retraining jobs
-}
-```
+### Update Intervals
+- **Sensor Data**: 1.5 seconds
+- **Risk Decay**: -0.7% per tick (during normal driving)
+- **Chart Refresh**: Every sensor update
+- **Location Update**: On initialization
 
 ---
 
-## 📊 Dataset
+## 🌐 API Integration
 
-### MoRTH-Based Training Data
+### Open-Meteo Weather API
+```javascript
+const weatherEndpoint = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=weather_code,temperature_2m`;
+```
 
-- **Size**: 50,000 synthetic records
-- **Coverage**: All Indian regions (8°N to 32.8°N)
-- **Features**: 17 sensor and contextual variables
-- **Accident Rate**: 16.1% high-risk scenarios (>25%)
+**Response Data Used:**
+- Weather code (0-99)
+- Temperature (°C)
+- Elevation (meters)
 
-### Data Schema
+### Nominatim Reverse Geocoding
+```javascript
+const locationEndpoint = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
+```
 
-| Column | Type | Description |
-|--------|------|-------------|
-| `weekday` | String | Day of week (Mon-Sun) |
-| `time` | Time | Hour:minute (24h format) |
-| `latitude` | Float | GPS latitude |
-| `longitude` | Float | GPS longitude |
-| `altitude_m` | Integer | Altitude in meters |
-| `speed_kmph` | Integer | Vehicle speed |
-| `accel_x/y/z` | Float | Accelerometer readings (m/s²) |
-| `gyro_x/y/z` | Float | Gyroscope readings (rad/s) |
-| `weather` | String | Weather condition |
-| `traffic` | String | Traffic density |
-| `road_class` | String | Road type |
-| `region_type` | String | Urban/Rural classification |
-| `accident_rate` | Float | Risk percentage (0-100%) |
+**Response Data Used:**
+- City name
+- Country name
+
+---
+
+## 🎨 Design System
+
+### Color Palette
+```css
+/* Dark Theme */
+--bg-primary: #0a0a0a
+--bg-secondary: #111111
+--accent-primary: #00d4ff
+--success: #00ff88
+--warning: #ffaa00
+--danger: #ff3366
+```
+
+### Sensor Chart Colors
+- **Accelerometer**: Red (#ef4444), Yellow (#fbbf24), Green (#22c55e)
+- **Gyroscope**: Pink (#ec4899), Red (#ef4444), Purple (#a855f7)
+
+### Animations
+- Floating background gradients (20s loop)
+- Pulse effect on status indicators (2s loop)
+- Slide-in animations for log entries (0.3s)
+- Hover lift effects on cards (0.3s transition)
+
+---
+
+## 📊 Performance Optimization
+
+- **Canvas Rendering**: Device pixel ratio scaling for sharp visuals
+- **Data Management**: Sliding window (20 data points) for efficient memory usage
+- **Debounced Updates**: 1.5-second intervals prevent UI thrashing
+- **Lazy Evaluation**: Charts only redraw on data changes
+
+---
+
+## 🔒 Security & Privacy
+
+- **No Data Storage**: All data processed locally in browser
+- **No Backend**: Purely client-side application
+- **API Keys**: Environment variables for sensitive credentials
+- **HTTPS Only**: Geolocation API requires secure context
+
+---
+
+## 🚧 Future Enhancements
+
+- [ ] Real smartphone sensor integration (DeviceMotion API)
+- [ ] Backend ML model for accurate accident prediction
+- [ ] SMS/Call integration for emergency contacts
+- [ ] Historical trip data storage and analytics
+- [ ] Multi-language support
+- [ ] Voice alerts and commands
+- [ ] Integration with car OBD-II systems
+- [ ] Cloud sync for trip history
 
 ---
 
 ## 🤝 Contributing
 
-Contributions welcome.
+Contributions are welcome! Please follow these steps:
 
-- Small changes: fork → branch (git checkout -b feature/name) → run tests/linters → commit → open a PR to main.
-- Large changes: open an issue first to discuss scope.
-- Add tests and update docs when applicable.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-Questions: use GitHub Issues/Discussions
-
-### Development Process
-
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/AmazingFeature`)
-3. **Commit** your changes (`git commit -m 'Add some AmazingFeature'`)
-4. **Push** to the branch (`git push origin feature/AmazingFeature`)
-5. **Open** a Pull Request
-
-### Code Style
-
-- **Python**: Follow PEP 8, use `black` formatter
-- **JavaScript**: Follow Airbnb style guide, use `prettier`
-- **Documentation**: Update README and inline comments
-- **Testing**: Write tests for new features
+### Code Style Guidelines
+- Use TypeScript for type safety
+- Follow React Hooks best practices
+- Maintain component modularity
+- Add comments for complex logic
+- Test on multiple browsers
 
 ---
 
-## 👥 Team
+## 📄 License
 
-### Core Developers
-- **[Om Prakash Kumar]** - *Full Stack Developer & ML Engineer* - [GitHub](https://github.com/Omii1908)
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
-### Contributors
-See the list of [contributors](https://github.com/Omii1908/Reflex/contributors) who participated in this project.
+---
+
+## 👨‍💻 Author
+
+**Your Name**
+- GitHub: [@yourusername](https://github.com/yourusername)
+- LinkedIn: [Your Profile](https://linkedin.com/in/yourprofile)
+- Email: your.email@example.com
 
 ---
 
 ## 🙏 Acknowledgments
 
-- **Ministry of Road Transport and Highways (MoRTH)** - For accident statistics and research data
-- **Open Source Community** - For the amazing tools and libraries
-- **React Native Community** - For sensor access libraries
-- **Django Community** - For the robust web framework
+- **Google Gemini AI** for intelligent trip analysis
+- **Open-Meteo** for free weather data API
+- **OpenStreetMap** for reverse geocoding services
+- **React Team** for the amazing framework
 
 ---
 
-## 📞 Support & Contact
+## 📞 Support
 
-- **Issues**: [GitHub Issues](https://github.com/Omii1908/Reflex/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/Omii1908/Reflex/discussions)
-- **Email**: omi844198@gmail.com
-- **Website**: [www.reflexapp.in](https://reflexapp.in)
+If you encounter any issues or have questions:
+- Open an issue on [GitHub Issues](https://github.com/yourusername/reflex-safety-monitor/issues)
+- Check the [FAQ section](#faq)
+- Contact via email
 
 ---
 
-<div align="center">
-  <p><strong>Made with ❤️ for Road Safety in India</strong></p>
-  <p>
-    <img src="https://img.shields.io/badge/Save-Lives-red?style=for-the-badge" alt="Save Lives"/>
-    <img src="https://img.shields.io/badge/Technology-For%20Good-green?style=for-the-badge" alt="Technology for Good"/>
-  </p>
-</div>
+## 🎯 Project Status
+
+**Current Version**: 1.0.0  
+**Status**: Active Development  
+**Last Updated**: November 2025
+
+---
+
+## FAQ
+
+**Q: Why does the app ask for location permissions?**  
+A: Location is used to fetch real-time weather data and provide accurate regional context for risk assessment. The app works with default settings if denied.
+
+**Q: Can I use this with a real vehicle?**  
+A: Currently, this is a demonstration/simulation tool. Future versions will integrate with actual smartphone sensors and vehicle systems.
+
+**Q: How accurate is the risk assessment?**  
+A: The current version uses simulated data and heuristic algorithms. Production deployment would require ML models trained on real accident data.
+
+**Q: Does this work offline?**  
+A: Partial functionality is available offline (sensor simulation, charts), but weather/location features require internet connectivity.
+
+**Q: Can I customize the emergency contacts?**  
+A: Yes! Edit the `EMERGENCY_CONTACTS` array in the source code or implement a settings panel for dynamic configuration.
+
+---
+
+**Built with ❤️ for safer roads**
